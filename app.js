@@ -8,7 +8,7 @@ const PASS_PCT = 0.8; // 80% = 16/20
 // Salt used to build the verification code. This is NOT real cryptographic
 // security (anyone can view this source file) — it's a lightweight check to
 // catch casual tampering, not a defense against a determined forger. The
-// auto-sent result + Google Sheet log are the real record.
+// optional Google Sheet log is the real record.
 const CODE_SALT = "WNS-TCQ-2026";
 
 let testQuestions = [];
@@ -198,7 +198,7 @@ function showResults() {
 
   function sendResults() {
     statusEl.className = "send-status sending";
-    statusEl.textContent = "Sending your results to your teacher…";
+    statusEl.textContent = "Recording your results…";
     retryBtn.style.display = "none";
     fetch(RESULTS_WEBHOOK_URL, {
       method: "POST",
@@ -208,20 +208,20 @@ function showResults() {
     })
       .then(() => {
         statusEl.className = "send-status sent";
-        statusEl.textContent = "✓ Results sent to your teacher automatically.";
+        statusEl.textContent = "✓ Your results have been recorded automatically.";
       })
       .catch(() => {
         statusEl.className = "send-status failed";
-        statusEl.textContent = "⚠ Couldn't send automatically — check your internet connection.";
+        statusEl.textContent = "⚠ Couldn't record automatically — check your internet connection.";
         retryBtn.style.display = "inline-block";
       });
   }
 
   if (hasWebhook) {
-    // Results send automatically — no student action, no editable draft.
+    // Results record automatically — no student action, no editable draft.
     sendResults();
   } else {
-    // No webhook configured yet: nothing to send to automatically. Let the
+    // No webhook configured yet: nothing to record automatically. Let the
     // student know their certificate/code is what they have to show.
     statusEl.className = "send-status notconfigured";
     statusEl.textContent = "Show this certificate (or its verification code) to your teacher.";
