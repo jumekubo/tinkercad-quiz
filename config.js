@@ -12,4 +12,4 @@
    pre-filled email draft in the student's own mail app (which they COULD
    edit before sending, since there's no backend involved yet).
 */
-const RESULTS_WEBHOOK_URL = "";
+const RESULTS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbx30UNIm9ZB-prijn2rSSMz_AYDPIGZmUJzad0naQGUgXubeOyKDSSKvra9YwYCCBSX/exec";
