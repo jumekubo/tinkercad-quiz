@@ -307,6 +307,19 @@
   }
   #verify-result.match{ display:block; background:#DFF3E6; color:var(--green); }
   #verify-result.nomatch{ display:block; background:#FBE4E4; color:var(--red); }
+  /* ---- Send status ---- */
+  .send-status{
+    font-weight:600;
+    font-size:14px;
+    padding:10px 14px;
+    border-radius:8px;
+    margin-bottom:18px;
+    display:none;
+  }
+  .send-status.sending{ display:block; background:var(--cream); color:var(--gray); border:1.5px solid var(--line); }
+  .send-status.sent{ display:block; background:#DFF3E6; color:var(--green); }
+  .send-status.failed{ display:block; background:#FBE4E4; color:var(--red); }
+  .send-status.notconfigured{ display:block; background:var(--cream); color:var(--gray); border:1.5px solid var(--line); }
   footer{
     font-size:12.5px;
     color:var(--gray);
@@ -383,8 +396,10 @@
     <div class="score-sub" id="final-pct">0%</div>
     <div id="pass-badge" class="pass-badge">Pass</div>
 
+    <div class="send-status" id="send-status"></div>
+
     <div class="btn-row">
-      <button class="btn btn-small no-print" id="email-btn">Email My Results (opens draft)</button>
+      <button class="btn btn-small no-print" id="retry-send-btn" style="display:none;">Try Sending Again</button>
       <button class="btn btn-small btn-secondary no-print" id="print-btn">Print / Save Certificate</button>
       <button class="btn btn-small btn-secondary no-print" id="retake-btn">Take the Test Again</button>
     </div>

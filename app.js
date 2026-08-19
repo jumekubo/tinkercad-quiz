@@ -4,12 +4,11 @@
 
 const TEST_LENGTH = 20;
 const PASS_PCT = 0.8; // 80% = 16/20
-const TEACHER_EMAIL = "jumekubo@wnsk8.com";
 
 // Salt used to build the verification code. This is NOT real cryptographic
 // security (anyone can view this source file) — it's a lightweight check to
 // catch casual tampering, not a defense against a determined forger. The
-// email + optional Google Sheet log are the real record.
+// auto-sent result + Google Sheet log are the real record.
 const CODE_SALT = "WNS-TCQ-2026";
 
 let testQuestions = [];
@@ -170,8 +169,8 @@ function showResults() {
     `Tinkercad Skills Check — ${dateStr} — ${passed ? "PASS" : "NOT YET"}`;
   document.getElementById("cert-code").textContent = code;
 
-  const emailBtn = document.getElementById("email-btn");
-  emailBtn.disabled = false;
+  const statusEl = document.getElementById("send-status");
+  const retryBtn = document.getElementById("retry-send-btn");
   const hasWebhook = typeof RESULTS_WEBHOOK_URL === "string" && RESULTS_WEBHOOK_URL;
   const payload = {
     name: studentName,
@@ -181,45 +180,39 @@ function showResults() {
     date: dateStr,
     code: code
   };
-  const mailtoFallback = () => {
-    const subject = `Tinkercad Skills Check Result — ${studentName}`;
-    const body =
-      `Name: ${studentName}\n` +
-      `Score: ${score}/${TEST_LENGTH} (${pct}%)\n` +
-      `Result: ${passed ? "PASS" : "NOT YET"}\n` +
-      `Date: ${dateStr}\n` +
-      `Verification code: ${code}`;
-    window.location.href =
-      `mailto:${TEACHER_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  };
+
+  function sendResults() {
+    statusEl.className = "send-status sending";
+    statusEl.textContent = "Sending your results to your teacher…";
+    retryBtn.style.display = "none";
+    fetch(RESULTS_WEBHOOK_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify(payload)
+    })
+      .then(() => {
+        statusEl.className = "send-status sent";
+        statusEl.textContent = "✓ Results sent to your teacher automatically.";
+      })
+      .catch(() => {
+        statusEl.className = "send-status failed";
+        statusEl.textContent = "⚠ Couldn't send automatically — check your internet connection.";
+        retryBtn.style.display = "inline-block";
+      });
+  }
 
   if (hasWebhook) {
-    // Auto-send mode: the webhook (Apps Script) both logs this attempt to a
-    // Sheet and emails the teacher directly — no editable draft involved.
-    emailBtn.textContent = "Send Results to My Teacher";
-    emailBtn.onclick = () => {
-      emailBtn.disabled = true;
-      emailBtn.textContent = "Sending…";
-      fetch(RESULTS_WEBHOOK_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "text/plain" },
-        body: JSON.stringify(payload)
-      })
-        .then(() => {
-          emailBtn.textContent = "✓ Sent to your teacher";
-        })
-        .catch(() => {
-          emailBtn.disabled = false;
-          emailBtn.textContent = "Send failed — tap to try again";
-        });
-    };
+    // Results send automatically — no student action, no editable draft.
+    sendResults();
   } else {
-    // Fallback mode: no webhook configured yet, so fall back to a mailto:
-    // draft. This is editable by the student before they hit send.
-    emailBtn.textContent = "Email My Results (opens draft)";
-    emailBtn.onclick = mailtoFallback;
+    // No webhook configured yet: nothing to send to automatically. Let the
+    // student know their certificate/code is what they have to show.
+    statusEl.className = "send-status notconfigured";
+    statusEl.textContent = "Show this certificate (or its verification code) to your teacher.";
+    retryBtn.style.display = "none";
   }
+  retryBtn.onclick = sendResults;
 
   document.getElementById("print-btn").onclick = () => window.print();
 }
