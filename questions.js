@@ -1,5 +1,5 @@
 /* Tinkercad Skills Check — Question Bank
-   WNS Studio | 56 questions covering core Tinkercad 3D Design skills.
+   WNS Studio | 54 questions covering core Tinkercad 3D Design skills.
    Each test draws 20 random questions from this bank (see app.js).
    type: "tf" (true/false) or "mc" (multiple choice)
    img (optional): filename in /images/ folder, shown above the question
@@ -51,8 +51,6 @@ const QUESTION_BANK = [
   { id: 43, type: "tf", text: "To save your progress and share your designs in Tinkercad, you need to be logged into an account.", answer: true },
   { id: 44, type: "mc", text: "What is the most common file type used to export a Tinkercad design for 3D printing?", options: [".STL", ".MP3", ".DOCX", ".PNG"], answer: 0 },
   { id: 45, type: "tf", text: "You can import your own STL or SVG files into Tinkercad to combine with your design.", answer: true },
-  { id: 46, type: "mc", text: "Besides 3D Designs, what other type of project can you build in Tinkercad?", options: ["Circuits", "Spreadsheets", "Websites", "Presentations"], answer: 0 },
-  { id: 47, type: "tf", text: "Tinkercad Codeblocks lets you snap together blocks of code, similar to Scratch, to generate 3D shapes.", answer: true },
   { id: 48, type: "mc", text: "In the Community Gallery, what does making your own copy of a public design (sometimes called \"remixing\") let you do?", options: ["Delete someone else's design", "Make your own editable copy of a public design to modify", "Report the design", "Automatically 3D print it"], answer: 1 },
   { id: 49, type: "tf", text: "It's good etiquette to give credit to the original designer when you remix or build on someone else's public Tinkercad design.", answer: true },
   { id: 50, type: "tf", text: "Before printing any 3D design at school, it's a good idea to check with your teacher first.", answer: true },
