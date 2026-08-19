@@ -58,9 +58,24 @@ function todayStr() {
 }
 
 function makeCode(name, scoreVal, dateStr) {
-  const key = `${name.trim().toLowerCase()}|${scoreVal}/${TEST_LENGTH}|${dateStr}|${CODE_SALT}`;
+  const cleanName = name.trim().toLowerCase().replace(/\s+/g, " ");
+  const key = `${cleanName}|${scoreVal}/${TEST_LENGTH}|${dateStr}|${CODE_SALT}`;
   const h = simpleHash(key).toString(36).toUpperCase().padStart(8, "0").slice(0, 8);
   return `${h.slice(0, 4)}-${h.slice(4, 8)}`;
+}
+
+// Forgiving parsers for the manual "verify a code" form — people will
+// naturally copy the score as it's shown ("14/20"), not the raw number the
+// code is actually built from, so pull just the number out.
+function extractScoreNumber(raw) {
+  const match = String(raw).match(/\d+/);
+  return match ? match[0] : String(raw).trim();
+}
+function extractDate(raw) {
+  const match = String(raw).match(/(\d{4})\D+(\d{1,2})\D+(\d{1,2})/);
+  if (!match) return String(raw).trim();
+  const [, y, m, d] = match;
+  return `${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
 }
 
 function startTest() {
@@ -235,8 +250,8 @@ document.getElementById("verify-link").addEventListener("click", () => {
 });
 document.getElementById("verify-btn").addEventListener("click", () => {
   const name = document.getElementById("verify-name").value.trim();
-  const scoreVal = document.getElementById("verify-score").value.trim();
-  const dateStr = document.getElementById("verify-date").value.trim();
+  const scoreVal = extractScoreNumber(document.getElementById("verify-score").value);
+  const dateStr = extractDate(document.getElementById("verify-date").value);
   const enteredCode = document.getElementById("verify-code").value.trim().toUpperCase();
   const expected = makeCode(name, scoreVal, dateStr);
   const result = document.getElementById("verify-result");
