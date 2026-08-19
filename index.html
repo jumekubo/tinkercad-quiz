@@ -218,11 +218,105 @@
   }
   .pass-badge.pass{ background:#DFF3E6; color:var(--green); }
   .pass-badge.fail{ background:#FBE4E4; color:var(--red); }
+  /* ---- Name field ---- */
+  .field-label{
+    display:block;
+    font-weight:700;
+    font-size:14px;
+    margin-bottom:6px;
+  }
+  .text-input{
+    width:100%;
+    font-family:'Inter',sans-serif;
+    font-size:15.5px;
+    padding:12px 14px;
+    border-radius:10px;
+    border:2px solid var(--ink);
+    margin-bottom:6px;
+  }
+  .field-hint{
+    font-size:12.5px;
+    color:var(--gray);
+    margin:0 0 18px;
+  }
+  /* ---- Certificate ---- */
+  .cert-card{
+    border:2px dashed var(--ink);
+    border-radius:10px;
+    background:var(--cream);
+    padding:18px 20px;
+    margin-bottom:18px;
+    text-align:left;
+  }
+  .cert-label{
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--gray);
+    margin-bottom:6px;
+  }
+  .cert-name{
+    font-family:'Archivo',sans-serif;
+    font-weight:800;
+    font-size:22px;
+    margin-bottom:4px;
+  }
+  .cert-meta{
+    font-size:13.5px;
+    color:var(--gray);
+    margin-bottom:8px;
+  }
+  .cert-code{
+    font-family:monospace;
+    font-size:14px;
+    font-weight:700;
+    background:var(--white);
+    border:1.5px solid var(--ink);
+    border-radius:6px;
+    padding:4px 10px;
+    display:inline-block;
+    letter-spacing:.05em;
+  }
+  .btn-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    justify-content:center;
+    margin-top:6px;
+  }
+  .btn-small{
+    font-size:14px;
+    padding:10px 18px;
+  }
+  /* ---- Verify panel ---- */
+  #verify-link{
+    color:var(--blue);
+    font-weight:600;
+    cursor:pointer;
+    text-decoration:underline;
+  }
+  #verify-panel{ display:none; text-align:left; }
+  #verify-panel .text-input{ margin-bottom:12px; }
+  #verify-result{
+    font-weight:700;
+    padding:10px 14px;
+    border-radius:8px;
+    margin-top:10px;
+    display:none;
+  }
+  #verify-result.match{ display:block; background:#DFF3E6; color:var(--green); }
+  #verify-result.nomatch{ display:block; background:#FBE4E4; color:var(--red); }
   footer{
     font-size:12.5px;
     color:var(--gray);
     padding:18px 16px 30px;
     text-align:center;
+  }
+  @media print{
+    header, footer, .no-print{ display:none !important; }
+    body{ background:var(--white); }
+    .card{ box-shadow:none; border:2px solid var(--ink); }
   }
 </style>
 </head>
@@ -243,9 +337,13 @@
       <li>Once you pick an answer for a question and move on, you can't go back — so take your time.</li>
       <li>You'll see your score and whether you passed at the end. A score of <strong>80% (16 out of 20)</strong> or higher is a pass.</li>
       <li>You can retake the test as many times as you'd like to practice.</li>
+      <li>Your name goes on your results so your teacher can tell it's really you.</li>
     </ul>
-    <div class="center" style="margin-top:22px;">
-      <button class="btn" id="start-btn">Start Test</button>
+    <label class="field-label" for="student-name">Full Name (First and Last)</label>
+    <input type="text" id="student-name" class="text-input" placeholder="e.g. Jordan Smith" autocomplete="name">
+    <p class="field-hint">This is shown on your results and used to build your verification code.</p>
+    <div class="center" style="margin-top:14px;">
+      <button class="btn" id="start-btn" disabled>Start Test</button>
     </div>
   </div>
 
@@ -273,17 +371,43 @@
 
   <div class="card" id="results-screen">
     <div class="q-type-tag">Test Complete</div>
+
+    <div class="cert-card">
+      <div class="cert-label">Certificate of Completion</div>
+      <div class="cert-name" id="cert-name">—</div>
+      <div class="cert-meta" id="cert-meta">—</div>
+      <div class="cert-code">Verification code: <span id="cert-code">—</span></div>
+    </div>
+
     <div class="score-big" id="final-score">0/20</div>
     <div class="score-sub" id="final-pct">0%</div>
     <div id="pass-badge" class="pass-badge">Pass</div>
-    <div>
-      <button class="btn" id="retake-btn">Take the Test Again</button>
+
+    <div class="btn-row">
+      <button class="btn btn-small no-print" id="email-btn">Email My Results</button>
+      <button class="btn btn-small btn-secondary no-print" id="print-btn">Print / Save Certificate</button>
+      <button class="btn btn-small btn-secondary no-print" id="retake-btn">Take the Test Again</button>
     </div>
   </div>
 
 </main>
 
-<footer>Built for WNS Studio students learning Tinkercad. Screenshots are from Tinkercad's own Learning Center (tinkercad.com/learn), used here for teaching purposes.</footer>
+<footer>
+  Built for WNS Studio students learning Tinkercad. Screenshots are from Tinkercad's own Learning Center (tinkercad.com/learn), used here for teaching purposes.
+  <div style="margin-top:8px;"><span id="verify-link">Verify a result code</span></div>
+  <div class="card" id="verify-panel" style="max-width:420px; margin:14px auto 0;">
+    <label class="field-label" for="verify-name">Student's Full Name</label>
+    <input type="text" id="verify-name" class="text-input" placeholder="e.g. Jordan Smith">
+    <label class="field-label" for="verify-score">Score (e.g. 17)</label>
+    <input type="text" id="verify-score" class="text-input" placeholder="17">
+    <label class="field-label" for="verify-date">Date on the certificate (YYYY-MM-DD)</label>
+    <input type="text" id="verify-date" class="text-input" placeholder="2026-08-19">
+    <label class="field-label" for="verify-code">Verification Code</label>
+    <input type="text" id="verify-code" class="text-input" placeholder="XXXX-XXXX">
+    <button class="btn btn-small" id="verify-btn">Check Code</button>
+    <div id="verify-result"></div>
+  </div>
+</footer>
 
 <script src="questions.js"></script>
 <script src="images/img-shapes-panel.js"></script>
@@ -297,6 +421,7 @@
 <script src="images/img-text-shapes.js"></script>
 <script src="images/img-primitive-shapes.js"></script>
 <script src="images/img-creating-holes.js"></script>
+<script src="config.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

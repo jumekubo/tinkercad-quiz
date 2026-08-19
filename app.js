@@ -4,11 +4,19 @@
 
 const TEST_LENGTH = 20;
 const PASS_PCT = 0.8; // 80% = 16/20
+const TEACHER_EMAIL = "jumekubo@wnsk8.com";
+
+// Salt used to build the verification code. This is NOT real cryptographic
+// security (anyone can view this source file) — it's a lightweight check to
+// catch casual tampering, not a defense against a determined forger. The
+// email + optional Google Sheet log are the real record.
+const CODE_SALT = "WNS-TCQ-2026";
 
 let testQuestions = [];
 let currentIndex = 0;
 let score = 0;
 let selectedValue = null; // holds the chosen answer for the current question before "Next" is pressed
+let studentName = "";
 
 function shuffle(arr) {
   const a = arr.slice();
@@ -35,7 +43,30 @@ function buildTest() {
   });
 }
 
+function simpleHash(str) {
+  // djb2 — fast, deterministic, non-cryptographic. Good enough to catch a
+  // casually edited score, not meant to resist a determined forger.
+  let h = 5381;
+  for (let i = 0; i < str.length; i++) {
+    h = ((h << 5) + h + str.charCodeAt(i)) >>> 0;
+  }
+  return h;
+}
+
+function todayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+function makeCode(name, scoreVal, dateStr) {
+  const key = `${name.trim().toLowerCase()}|${scoreVal}/${TEST_LENGTH}|${dateStr}|${CODE_SALT}`;
+  const h = simpleHash(key).toString(36).toUpperCase().padStart(8, "0").slice(0, 8);
+  return `${h.slice(0, 4)}-${h.slice(4, 8)}`;
+}
+
 function startTest() {
+  studentName = document.getElementById("student-name").value.trim();
+  if (!studentName) return;
   buildTest();
   currentIndex = 0;
   score = 0;
@@ -131,11 +162,77 @@ function showResults() {
   badge.textContent = passed ? "Pass ✓" : "Not Yet — Try Again";
   badge.classList.toggle("pass", passed);
   badge.classList.toggle("fail", !passed);
+
+  const dateStr = todayStr();
+  const code = makeCode(studentName, score, dateStr);
+  document.getElementById("cert-name").textContent = studentName;
+  document.getElementById("cert-meta").textContent =
+    `Tinkercad Skills Check — ${dateStr} — ${passed ? "PASS" : "NOT YET"}`;
+  document.getElementById("cert-code").textContent = code;
+
+  const emailBtn = document.getElementById("email-btn");
+  emailBtn.onclick = () => {
+    const subject = `Tinkercad Skills Check Result — ${studentName}`;
+    const body =
+      `Name: ${studentName}\n` +
+      `Score: ${score}/${TEST_LENGTH} (${pct}%)\n` +
+      `Result: ${passed ? "PASS" : "NOT YET"}\n` +
+      `Date: ${dateStr}\n` +
+      `Verification code: ${code}`;
+    window.location.href =
+      `mailto:${TEACHER_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
+  document.getElementById("print-btn").onclick = () => window.print();
+
+  // Optional: auto-log to a Google Sheet if a webhook URL has been configured
+  // in config.js. Silently does nothing if it's left blank.
+  if (typeof SHEET_WEBHOOK_URL === "string" && SHEET_WEBHOOK_URL) {
+    fetch(SHEET_WEBHOOK_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({
+        name: studentName,
+        score: score,
+        total: TEST_LENGTH,
+        pass: passed,
+        date: dateStr,
+        code: code
+      })
+    }).catch(() => {});
+  }
 }
 
+document.getElementById("student-name").addEventListener("input", (e) => {
+  document.getElementById("start-btn").disabled = e.target.value.trim().length === 0;
+});
 document.getElementById("start-btn").addEventListener("click", startTest);
 document.getElementById("next-btn").addEventListener("click", nextQuestion);
 document.getElementById("retake-btn").addEventListener("click", () => {
   document.getElementById("results-screen").style.display = "none";
   document.getElementById("intro").style.display = "block";
+  document.getElementById("student-name").value = "";
+  document.getElementById("start-btn").disabled = true;
+});
+
+document.getElementById("verify-link").addEventListener("click", () => {
+  const panel = document.getElementById("verify-panel");
+  panel.style.display = panel.style.display === "block" ? "none" : "block";
+});
+document.getElementById("verify-btn").addEventListener("click", () => {
+  const name = document.getElementById("verify-name").value.trim();
+  const scoreVal = document.getElementById("verify-score").value.trim();
+  const dateStr = document.getElementById("verify-date").value.trim();
+  const enteredCode = document.getElementById("verify-code").value.trim().toUpperCase();
+  const expected = makeCode(name, scoreVal, dateStr);
+  const result = document.getElementById("verify-result");
+  result.classList.remove("match", "nomatch");
+  if (name && scoreVal && dateStr && enteredCode && expected === enteredCode) {
+    result.textContent = "✓ Code matches — this looks like a genuine result.";
+    result.classList.add("match");
+  } else {
+    result.textContent = "✗ No match. Double-check the name, score, and date exactly as shown on the certificate.";
+    result.classList.add("nomatch");
+  }
 });
