@@ -60,8 +60,8 @@ function renderQuestion() {
   document.getElementById("q-text").textContent = q.text;
 
   const imgEl = document.getElementById("q-img");
-  if (q.img) {
-    imgEl.src = `images/${q.img}`;
+  if (q.img && IMAGES[q.img]) {
+    imgEl.src = IMAGES[q.img];
     imgEl.style.display = "block";
   } else {
     imgEl.style.display = "none";
