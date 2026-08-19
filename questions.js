@@ -1,5 +1,5 @@
 /* Tinkercad Skills Check — Question Bank
-   WNS Studio | 54 questions covering core Tinkercad 3D Design skills.
+   WNS Studio | 100 questions covering core Tinkercad 3D Design skills.
    Each test draws 20 random questions from this bank (see app.js).
    type: "tf" (true/false) or "mc" (multiple choice)
    img (optional): filename in /images/ folder, shown above the question
@@ -8,7 +8,6 @@
 const QUESTION_BANK = [
   { id: 1, type: "tf", text: "Tinkercad is completely free to use for students.", answer: true },
   { id: 2, type: "tf", text: "Tinkercad runs inside a web browser, so you don't need to install any special software to use it.", answer: true },
-  { id: 3, type: "mc", text: "Which company makes Tinkercad?", options: ["Adobe", "Autodesk", "Microsoft", "Google"], answer: 1 },
   { id: 4, type: "tf", text: "You need an internet connection to open and edit your designs in Tinkercad.", answer: true },
   { id: 5, type: "mc", img: "shapes-panel.png", text: "In this screenshot, where do you drag a shape from to add it to your design?", options: ["The flat grid area on the left", "The panel of shape icons on the right", "The Import button at the top", "The ruler icon"], answer: 1 },
   { id: 6, type: "mc", text: "The flat grid where you build your 3D design in Tinkercad is called the ____.", options: ["baseplate", "workplane", "canvas", "stage"], answer: 1 },
@@ -59,5 +58,52 @@ const QUESTION_BANK = [
   { id: 53, type: "mc", text: "If two overlapping Solid shapes (no holes involved) are Grouped together, what happens?", options: ["They combine into a single solid shape", "Nothing changes", "One shape deletes the other", "They automatically become a hole"], answer: 0 },
   { id: 54, type: "tf", text: "The Undo command can be used to fix a mistake, like an accidental move or deletion.", answer: true },
   { id: 55, type: "mc", text: "What is the common keyboard shortcut used to undo a mistake in most design programs, including Tinkercad?", options: ["Ctrl+Z (or Cmd+Z)", "Ctrl+P", "Ctrl+S", "Alt+F4"], answer: 0 },
-  { id: 56, type: "tf", text: "In Tinkercad, you can select multiple shapes at once by dragging a selection box around them, or by shift-clicking each one.", answer: true }
+  { id: 56, type: "tf", text: "In Tinkercad, you can select multiple shapes at once by dragging a selection box around them, or by shift-clicking each one.", answer: true },
+  { id: 57, type: "mc", text: "Which keyboard shortcut instantly duplicates the shape(s) you have selected?", options: ["Ctrl+D (Cmd+D on Mac)", "Ctrl+G", "Ctrl+A", "Ctrl+Z"], answer: 0 },
+  { id: 58, type: "mc", text: "Which keyboard shortcut groups two or more selected shapes together?", options: ["Ctrl+A", "Ctrl+G (Cmd+G)", "Ctrl+D", "Ctrl+C"], answer: 1 },
+  { id: 59, type: "tf", text: "Pressing Ctrl+Shift+G (or Cmd+Shift+G) ungroups shapes that were previously grouped together.", answer: true },
+  { id: 60, type: "mc", text: "Which keyboard shortcut selects every shape in your current design at once?", options: ["Ctrl+A (Cmd+A)", "Ctrl+S", "Ctrl+O", "Ctrl+N"], answer: 0 },
+  { id: 61, type: "tf", text: "After undoing a mistake with Ctrl+Z, you can press Ctrl+Y to redo the action you just undid.", answer: true },
+  { id: 62, type: "tf", text: "Locking a shape (for example with Ctrl+L) helps keep it from being accidentally moved or edited while you work on the rest of your design.", answer: true },
+  { id: 63, type: "tf", text: "Hiding a shape temporarily removes it from view without deleting it, which can make it easier to work on shapes underneath or behind it.", answer: true },
+  { id: 64, type: "mc", text: "Besides dragging with your mouse, what else can nudge a selected shape's position on the workplane?", options: ["The arrow keys on your keyboard", "The Text tool", "The Ruler tool", "The color swatches"], answer: 0 },
+  { id: 65, type: "tf", text: "Holding Shift while pressing an arrow key moves a selected shape a larger distance than pressing the arrow key by itself.", answer: true },
+  { id: 66, type: "tf", text: "Holding Ctrl (or Cmd) while pressing an arrow key moves a selected shape up or down (along its height) instead of sideways.", answer: true },
+  { id: 67, type: "mc", text: "Which key can you press to quickly fit your selected shape(s) into view?", options: ["F", "H", "G", "Q"], answer: 0 },
+  { id: 68, type: "tf", text: "Besides Perspective view, Tinkercad also offers an Orthographic (sometimes called 'orthogonal') camera view.", answer: true },
+  { id: 69, type: "mc", text: "An Orthographic (orthogonal) camera view is especially useful for ____.", options: ["Getting a flat, blueprint-like look that's helpful for lining shapes up", "Changing a shape's color", "Adding text to a design", "Exporting your file"], answer: 0 },
+  { id: 70, type: "tf", text: "Besides .STL, Tinkercad can also export a design as an .OBJ file.", answer: true },
+  { id: 71, type: "tf", text: "Tinkercad can import and export .SVG files, which are useful for flat 2D outlines like laser cutting.", answer: true },
+  { id: 72, type: "mc", text: "The abbreviation STL (the most common 3D printing export format) originally stood for ____.", options: ["Stereolithography", "Standard Triangle Layout", "Solid Tool Language", "System Transfer Log"], answer: 0 },
+  { id: 73, type: "mc", text: "Which of these is an example of a Tinkercad Shape Generator rather than a Basic Shape?", options: ["Gear", "Box", "Cylinder", "Sphere"], answer: 0 },
+  { id: 74, type: "tf", text: "Many of the specialty shapes found in Tinkercad's Shape Generators menu were contributed by the Tinkercad community.", answer: true },
+  { id: 75, type: "tf", text: "Turning off 'Snap to Grid' lets you place a shape freely instead of only at fixed grid points.", answer: true },
+  { id: 76, type: "tf", text: "You can open the Edit Grid settings to change the size (spacing) of the grid squares on your workplane.", answer: true },
+  { id: 77, type: "tf", text: "When picking a shape's color, Tinkercad lets you create a custom color instead of only choosing from the default swatches.", answer: true },
+  { id: 78, type: "tf", text: "In a shape's properties, lowering a cylinder's 'Sides' number makes it look more like a flat-faced polygon, while raising it makes the shape look smoother and rounder.", answer: true },
+  { id: 79, type: "tf", text: "The Ruler tool can also be used to measure the distance between two separate shapes, not just show a single shape's own size.", answer: true },
+  { id: 80, type: "tf", text: "Shapes placed using a workplane created on a slanted face of another shape will sit at an angle that matches that face, rather than lying flat on the ground.", answer: true },
+  { id: 81, type: "tf", text: "Designs with steep, unsupported overhangs are often harder to 3D print successfully than designs with gradual slopes.", answer: true },
+  { id: 82, type: "mc", text: "Which design habit generally makes a shape easier and more reliable to 3D print?", options: ["Avoiding steep, unsupported overhangs where possible", "Making every wall as thin as a single hair", "Adding as many small floating parts as possible", "Ignoring how the shape will sit on the print bed"], answer: 0 },
+  { id: 83, type: "tf", text: "Text created with the Text tool becomes a real 3D shape, so it can be grouped or combined with other shapes just like any other object.", answer: true },
+  { id: 84, type: "tf", text: "Ctrl+C (copy) and Ctrl+V (paste) work in Tinkercad similarly to how they work in many other computer programs.", answer: true },
+  { id: 85, type: "mc", text: "Which key deletes the shape(s) you currently have selected?", options: ["Delete (or Backspace)", "Enter", "Tab", "Shift"], answer: 0 },
+  { id: 86, type: "tf", text: "A shape's exact position can be checked and adjusted using number boxes in its properties, not just by dragging it with the mouse.", answer: true },
+  { id: 87, type: "mc", text: "What does \"grouping\" two or more shapes actually create?", options: ["One single combined object made from the original shapes", "Two completely separate objects that just look connected", "A brand new empty shape", "A duplicate of only one of the shapes"], answer: 0 },
+  { id: 88, type: "tf", text: "A Tinkercad design can include multiple separate shapes of different colors, as long as you don't group them into one object.", answer: true },
+  { id: 89, type: "tf", text: "By default, grouping two differently-colored solid shapes together makes the whole group become a single color instead of keeping each original color.", answer: true },
+  { id: 90, type: "tf", text: "Duplicate (Ctrl+D) copies and places a new shape in one single step, while Copy and Paste (Ctrl+C, then Ctrl+V) take two separate steps.", answer: true },
+  { id: 91, type: "tf", text: "Tinkercad lets you share a link to your design so someone else can view it, even if they don't have a Tinkercad account.", answer: true },
+  { id: 92, type: "tf", text: "You can rename your Tinkercad design with a custom project name instead of keeping the default auto-generated one.", answer: true },
+  { id: 93, type: "mc", text: "Which of these is NOT a way to select multiple shapes at once in Tinkercad?", options: ["Right-clicking a single shape twice", "Dragging a selection box around them", "Shift-clicking each shape", "Pressing Ctrl+A (Cmd+A) to select all"], answer: 0 },
+  { id: 94, type: "tf", text: "You can move the camera view (orbit, pan, zoom) without ever changing the actual position of your shapes in the design.", answer: true },
+  { id: 95, type: "mc", text: "A student accidentally moves a shape while trying to orbit the camera. What most likely happened?", options: ["They dragged the shape itself instead of using an orbit control (like right-click-drag or the view cube)", "Tinkercad has a bug that moves shapes randomly", "The workplane rotated on its own", "The shape was grouped incorrectly"], answer: 0 },
+  { id: 96, type: "tf", text: "Every new shape you add to your design starts out as a Solid; you have to change it to a Hole if you want it to cut away material.", answer: true },
+  { id: 97, type: "mc", text: "What most directly tells you, just by looking at a shape in the 3D editor, that it's set to be a Hole rather than a Solid?", options: ["It appears see-through with a striped/orange-ish look", "It turns bright green", "It disappears completely", "It becomes flat like paper"], answer: 0 },
+  { id: 98, type: "tf", text: "You can change a shape back and forth between Solid and Hole at any time before you group it.", answer: true },
+  { id: 99, type: "mc", text: "Which of these could you use to turn a selected shape into a Hole?", options: ["Right-click it and choose Hole (or use its keyboard shortcut)", "Rename the shape file", "Change your account settings", "Use the Ruler tool"], answer: 0 },
+  { id: 100, type: "tf", text: "The workplane surface shown by default isn't a real physical object — it represents where your model would sit, similar to a 3D printer's build area.", answer: true },
+  { id: 101, type: "mc", text: "If two students design separately and want to combine their work into one Tinkercad project, what is one reasonable way to do this?", options: ["Import one student's exported file (like an .STL) into the other's design", "It is impossible to combine designs from two different people", "Delete one of the designs", "Only a teacher can combine designs"], answer: 0 },
+  { id: 102, type: "tf", text: "STL files are commonly used to send a finished Tinkercad design to a 3D printer or slicing program.", answer: true },
+  { id: 103, type: "tf", text: "You do not need to know how to write code to design 3D objects in the part of Tinkercad this test covers.", answer: true }
 ];
