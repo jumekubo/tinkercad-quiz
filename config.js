@@ -1,11 +1,15 @@
 /* Optional settings — safe to edit directly on GitHub, no coding needed.
 
-   SHEET_WEBHOOK_URL: paste your Google Apps Script Web App URL here to have
-   every completed attempt (pass or fail) automatically logged as a new row
-   in a Google Sheet you control. Leave it as an empty string ("") to skip
-   this — the certificate and "Email My Results" button work either way.
+   RESULTS_WEBHOOK_URL: paste your Google Apps Script Web App URL here
+   (see sheet-logger-Code.gs for the script + setup steps) to turn on:
+     - Auto-logging every completed attempt as a row in a Google Sheet
+     - Auto-emailing you the result with NO editable draft for the student
+       (the "Send Results to My Teacher" button becomes a true one-click
+       send instead of opening a mail app draft)
 
-   See the setup instructions you were given for how to create the Sheet
-   and get this URL (it's a one-time, ~5 minute setup).
+   Leave it as an empty string ("") and the site still works — the
+   certificate still shows, and the results button falls back to opening a
+   pre-filled email draft in the student's own mail app (which they COULD
+   edit before sending, since there's no backend involved yet).
 */
-const SHEET_WEBHOOK_URL = "";
+const RESULTS_WEBHOOK_URL = "";

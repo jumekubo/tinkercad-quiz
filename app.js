@@ -171,7 +171,17 @@ function showResults() {
   document.getElementById("cert-code").textContent = code;
 
   const emailBtn = document.getElementById("email-btn");
-  emailBtn.onclick = () => {
+  emailBtn.disabled = false;
+  const hasWebhook = typeof RESULTS_WEBHOOK_URL === "string" && RESULTS_WEBHOOK_URL;
+  const payload = {
+    name: studentName,
+    score: score,
+    total: TEST_LENGTH,
+    pass: passed,
+    date: dateStr,
+    code: code
+  };
+  const mailtoFallback = () => {
     const subject = `Tinkercad Skills Check Result — ${studentName}`;
     const body =
       `Name: ${studentName}\n` +
@@ -183,25 +193,35 @@ function showResults() {
       `mailto:${TEACHER_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
-  document.getElementById("print-btn").onclick = () => window.print();
-
-  // Optional: auto-log to a Google Sheet if a webhook URL has been configured
-  // in config.js. Silently does nothing if it's left blank.
-  if (typeof SHEET_WEBHOOK_URL === "string" && SHEET_WEBHOOK_URL) {
-    fetch(SHEET_WEBHOOK_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify({
-        name: studentName,
-        score: score,
-        total: TEST_LENGTH,
-        pass: passed,
-        date: dateStr,
-        code: code
+  if (hasWebhook) {
+    // Auto-send mode: the webhook (Apps Script) both logs this attempt to a
+    // Sheet and emails the teacher directly — no editable draft involved.
+    emailBtn.textContent = "Send Results to My Teacher";
+    emailBtn.onclick = () => {
+      emailBtn.disabled = true;
+      emailBtn.textContent = "Sending…";
+      fetch(RESULTS_WEBHOOK_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify(payload)
       })
-    }).catch(() => {});
+        .then(() => {
+          emailBtn.textContent = "✓ Sent to your teacher";
+        })
+        .catch(() => {
+          emailBtn.disabled = false;
+          emailBtn.textContent = "Send failed — tap to try again";
+        });
+    };
+  } else {
+    // Fallback mode: no webhook configured yet, so fall back to a mailto:
+    // draft. This is editable by the student before they hit send.
+    emailBtn.textContent = "Email My Results (opens draft)";
+    emailBtn.onclick = mailtoFallback;
   }
+
+  document.getElementById("print-btn").onclick = () => window.print();
 }
 
 document.getElementById("student-name").addEventListener("input", (e) => {
