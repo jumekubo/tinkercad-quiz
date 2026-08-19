@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tinkercad Skills Check — WNS Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#232733;
+    --cream:#F7F4EC;
+    --white:#FFFFFF;
+    --blue:#2E5EAA;
+    --blue-dark:#1F3F78;
+    --orange:#FF7A33;
+    --green:#2E9E5B;
+    --red:#D94F4F;
+    --gray:#8A8F9C;
+    --line:#E4E0D6;
+    --radius:14px;
+    --shadow: 0 2px 0 var(--ink);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Inter',system-ui,sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  header{
+    width:100%;
+    background:var(--blue-dark);
+    color:var(--white);
+    padding:22px 16px 20px;
+    text-align:center;
+  }
+  header .eyebrow{
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:#B9CBEA;
+    font-weight:600;
+    margin-bottom:4px;
+  }
+  header h1{
+    font-family:'Archivo',sans-serif;
+    font-weight:800;
+    font-size:26px;
+    margin:0;
+    letter-spacing:.01em;
+  }
+  main{
+    width:100%;
+    max-width:720px;
+    padding:24px 16px 60px;
+    flex:1;
+  }
+  .card{
+    background:var(--white);
+    border:2px solid var(--ink);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:28px;
+    margin-bottom:20px;
+  }
+  /* ---- Intro screen ---- */
+  #intro h2{
+    font-family:'Archivo',sans-serif;
+    font-size:21px;
+    margin-top:0;
+  }
+  #intro ul{
+    padding-left:20px;
+    line-height:1.7;
+  }
+  #intro li{margin-bottom:6px;}
+  .btn{
+    display:inline-block;
+    font-family:'Inter',sans-serif;
+    font-weight:700;
+    font-size:16px;
+    padding:13px 26px;
+    border-radius:10px;
+    border:2px solid var(--ink);
+    background:var(--orange);
+    color:var(--ink);
+    cursor:pointer;
+    box-shadow:3px 3px 0 var(--ink);
+    transition:transform .08s ease;
+  }
+  .btn:hover{ transform:translate(-1px,-1px); box-shadow:4px 4px 0 var(--ink); }
+  .btn:active{ transform:translate(1px,1px); box-shadow:1px 1px 0 var(--ink); }
+  .btn:disabled{
+    opacity:.45;
+    cursor:not-allowed;
+    box-shadow:2px 2px 0 var(--ink);
+  }
+  .btn:disabled:hover{ transform:none; box-shadow:2px 2px 0 var(--ink); }
+  .btn-secondary{
+    background:var(--white);
+  }
+  .center{ text-align:center; }
+  /* ---- Quiz screen ---- */
+  #quiz-screen{ display:none; }
+  .progress-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
+    font-weight:600;
+    font-size:14px;
+    color:var(--gray);
+  }
+  .progress-track{
+    background:var(--line);
+    border-radius:8px;
+    height:10px;
+    overflow:hidden;
+    margin-bottom:24px;
+    border:1px solid var(--ink);
+  }
+  .progress-fill{
+    background:var(--blue);
+    height:100%;
+    width:0%;
+    transition:width .25s ease;
+  }
+  .q-type-tag{
+    display:inline-block;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    background:var(--cream);
+    border:1.5px solid var(--ink);
+    border-radius:20px;
+    padding:3px 10px;
+    margin-bottom:12px;
+  }
+  .q-text{
+    font-size:19px;
+    font-weight:600;
+    line-height:1.45;
+    margin:0 0 16px;
+  }
+  .q-img{
+    width:100%;
+    max-width:420px;
+    display:block;
+    margin:0 auto 18px;
+    border:2px solid var(--ink);
+    border-radius:10px;
+  }
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-bottom:22px;
+  }
+  .option{
+    text-align:left;
+    font-family:'Inter',sans-serif;
+    font-size:15.5px;
+    font-weight:500;
+    padding:13px 16px;
+    border-radius:10px;
+    border:2px solid var(--ink);
+    background:var(--white);
+    cursor:pointer;
+  }
+  .option:hover{ background:#F1F0EA; }
+  .option.selected{
+    background:var(--blue);
+    color:var(--white);
+    border-color:var(--blue-dark);
+  }
+  .tf-row{
+    display:flex;
+    gap:12px;
+    margin-bottom:22px;
+  }
+  .tf-row .option{
+    flex:1;
+    text-align:center;
+    font-weight:700;
+  }
+  .nav-row{
+    display:flex;
+    justify-content:flex-end;
+  }
+  /* ---- Results screen ---- */
+  #results-screen{ display:none; text-align:center; }
+  .score-big{
+    font-family:'Archivo',sans-serif;
+    font-weight:800;
+    font-size:56px;
+    margin:6px 0 2px;
+  }
+  .score-sub{
+    color:var(--gray);
+    font-weight:600;
+    margin-bottom:18px;
+  }
+  .pass-badge{
+    display:inline-block;
+    font-weight:800;
+    font-size:15px;
+    letter-spacing:.04em;
+    padding:8px 22px;
+    border-radius:30px;
+    border:2px solid var(--ink);
+    margin-bottom:20px;
+  }
+  .pass-badge.pass{ background:#DFF3E6; color:var(--green); }
+  .pass-badge.fail{ background:#FBE4E4; color:var(--red); }
+  footer{
+    font-size:12.5px;
+    color:var(--gray);
+    padding:18px 16px 30px;
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">WNS Studio</div>
+  <h1>Tinkercad Skills Check</h1>
+</header>
+
+<main>
+
+  <div class="card" id="intro">
+    <h2>Before you start</h2>
+    <ul>
+      <li>This test has <strong>20 questions</strong>, randomly picked from a larger question bank — so it's a little different every time.</li>
+      <li>Questions are <strong>true/false</strong> or <strong>multiple choice</strong>. Some include a screenshot from Tinkercad.</li>
+      <li>Once you pick an answer for a question and move on, you can't go back — so take your time.</li>
+      <li>You'll see your score and whether you passed at the end. A score of <strong>80% (16 out of 20)</strong> or higher is a pass.</li>
+      <li>You can retake the test as many times as you'd like to practice.</li>
+    </ul>
+    <div class="center" style="margin-top:22px;">
+      <button class="btn" id="start-btn">Start Test</button>
+    </div>
+  </div>
+
+  <div class="card" id="quiz-screen">
+    <div class="progress-row">
+      <span id="progress-label">Question 1 of 20</span>
+      <span id="score-label"></span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+
+    <span class="q-type-tag" id="q-type-tag"></span>
+    <img id="q-img" class="q-img" style="display:none;" alt="Tinkercad screenshot for this question">
+    <p class="q-text" id="q-text"></p>
+
+    <div id="tf-options" class="tf-row" style="display:none;">
+      <button class="option" data-val="true">True</button>
+      <button class="option" data-val="false">False</button>
+    </div>
+    <div id="mc-options" class="options" style="display:none;"></div>
+
+    <div class="nav-row">
+      <button class="btn" id="next-btn" disabled>Next →</button>
+    </div>
+  </div>
+
+  <div class="card" id="results-screen">
+    <div class="q-type-tag">Test Complete</div>
+    <div class="score-big" id="final-score">0/20</div>
+    <div class="score-sub" id="final-pct">0%</div>
+    <div id="pass-badge" class="pass-badge">Pass</div>
+    <div>
+      <button class="btn" id="retake-btn">Take the Test Again</button>
+    </div>
+  </div>
+
+</main>
+
+<footer>Built for WNS Studio students learning Tinkercad. Screenshots are from Tinkercad's own Learning Center (tinkercad.com/learn), used here for teaching purposes.</footer>
+
+<script src="questions.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
