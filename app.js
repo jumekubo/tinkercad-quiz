@@ -64,20 +64,6 @@ function makeCode(name, scoreVal, dateStr) {
   return `${h.slice(0, 4)}-${h.slice(4, 8)}`;
 }
 
-// Forgiving parsers for the manual "verify a code" form — people will
-// naturally copy the score as it's shown ("14/20"), not the raw number the
-// code is actually built from, so pull just the number out.
-function extractScoreNumber(raw) {
-  const match = String(raw).match(/\d+/);
-  return match ? match[0] : String(raw).trim();
-}
-function extractDate(raw) {
-  const match = String(raw).match(/(\d{4})\D+(\d{1,2})\D+(\d{1,2})/);
-  if (!match) return String(raw).trim();
-  const [, y, m, d] = match;
-  return `${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
-}
-
 function startTest() {
   studentName = document.getElementById("student-name").value.trim();
   if (!studentName) return;
@@ -242,25 +228,4 @@ document.getElementById("retake-btn").addEventListener("click", () => {
   document.getElementById("intro").style.display = "block";
   document.getElementById("student-name").value = "";
   document.getElementById("start-btn").disabled = true;
-});
-
-document.getElementById("verify-link").addEventListener("click", () => {
-  const panel = document.getElementById("verify-panel");
-  panel.style.display = panel.style.display === "block" ? "none" : "block";
-});
-document.getElementById("verify-btn").addEventListener("click", () => {
-  const name = document.getElementById("verify-name").value.trim();
-  const scoreVal = extractScoreNumber(document.getElementById("verify-score").value);
-  const dateStr = extractDate(document.getElementById("verify-date").value);
-  const enteredCode = document.getElementById("verify-code").value.trim().toUpperCase();
-  const expected = makeCode(name, scoreVal, dateStr);
-  const result = document.getElementById("verify-result");
-  result.classList.remove("match", "nomatch");
-  if (name && scoreVal && dateStr && enteredCode && expected === enteredCode) {
-    result.textContent = "✓ Code matches — this looks like a genuine result.";
-    result.classList.add("match");
-  } else {
-    result.textContent = "✗ No match. Double-check the name, score, and date exactly as shown on the certificate.";
-    result.classList.add("nomatch");
-  }
 });

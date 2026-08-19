@@ -289,24 +289,6 @@
     font-size:14px;
     padding:10px 18px;
   }
-  /* ---- Verify panel ---- */
-  #verify-link{
-    color:var(--blue);
-    font-weight:600;
-    cursor:pointer;
-    text-decoration:underline;
-  }
-  #verify-panel{ display:none; text-align:left; }
-  #verify-panel .text-input{ margin-bottom:12px; }
-  #verify-result{
-    font-weight:700;
-    padding:10px 14px;
-    border-radius:8px;
-    margin-top:10px;
-    display:none;
-  }
-  #verify-result.match{ display:block; background:#DFF3E6; color:var(--green); }
-  #verify-result.nomatch{ display:block; background:#FBE4E4; color:var(--red); }
   /* ---- Send status ---- */
   .send-status{
     font-weight:600;
@@ -409,19 +391,6 @@
 
 <footer>
   Built for WNS Studio students learning Tinkercad. Screenshots are from Tinkercad's own Learning Center (tinkercad.com/learn), used here for teaching purposes.
-  <div style="margin-top:8px;"><span id="verify-link">Verify a result code</span></div>
-  <div class="card" id="verify-panel" style="max-width:420px; margin:14px auto 0;">
-    <label class="field-label" for="verify-name">Student's Full Name</label>
-    <input type="text" id="verify-name" class="text-input" placeholder="e.g. Jordan Smith">
-    <label class="field-label" for="verify-score">Score (number correct — "14" or "14/20" both work)</label>
-    <input type="text" id="verify-score" class="text-input" placeholder="14 or 14/20">
-    <label class="field-label" for="verify-date">Date on the certificate (YYYY-MM-DD)</label>
-    <input type="text" id="verify-date" class="text-input" placeholder="2026-08-19">
-    <label class="field-label" for="verify-code">Verification Code</label>
-    <input type="text" id="verify-code" class="text-input" placeholder="XXXX-XXXX">
-    <button class="btn btn-small" id="verify-btn">Check Code</button>
-    <div id="verify-result"></div>
-  </div>
 </footer>
 
 <script src="questions.js"></script>
